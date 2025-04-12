@@ -1,5 +1,14 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from 'react';
+import { 
+  View, 
+  Text, 
+  FlatList, 
+  StyleSheet, 
+  TouchableOpacity, 
+  Image,
+  Modal,
+  Pressable 
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
@@ -45,6 +54,7 @@ const chatData: ChatItem[] = [
 
 export default function ChatsScreen() {
   const router = useRouter();
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
 
   const renderItem = ({ item }: { item: ChatItem }) => (
     <TouchableOpacity 
@@ -54,10 +64,13 @@ export default function ChatsScreen() {
         params: { id: item.id }
       })}
     >
-      <View style={styles.avatarContainer}>
+      <TouchableOpacity 
+        style={styles.avatarContainer}
+        onPress={() => setSelectedAvatar(item.avatar)}
+      >
         <Image source={{ uri: item.avatar }} style={styles.avatar} />
         {item.isOnline && <View style={styles.onlineIndicator} />}
-      </View>
+      </TouchableOpacity>
       <View style={styles.chatContent}>
         <View style={styles.chatHeader}>
           <Text style={styles.name}>{item.name}</Text>
@@ -89,6 +102,26 @@ export default function ChatsScreen() {
       <TouchableOpacity style={styles.fab}>
         <Ionicons name="chatbubbles-outline" size={24} color="#FFFFFF" />
       </TouchableOpacity>
+
+      <Modal
+        visible={!!selectedAvatar}
+        transparent={true}
+        onRequestClose={() => setSelectedAvatar(null)}
+        animationType="fade"
+      >
+        <Pressable 
+          style={styles.modalOverlay}
+          onPress={() => setSelectedAvatar(null)}
+        >
+          <View style={styles.modalContent}>
+            <Image 
+              source={{ uri: selectedAvatar || '' }}
+              style={styles.enlargedAvatar}
+              resizeMode="contain"
+            />
+          </View>
+        </Pressable>
+      </Modal>
     </View>
   );
 }
@@ -185,5 +218,21 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    padding: 20,
+    borderRadius: 20,
+    backgroundColor: 'transparent',
+  },
+  enlargedAvatar: {
+    width: 300,
+    height: 300,
+    borderRadius: 150,
   },
 });
