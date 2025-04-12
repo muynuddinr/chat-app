@@ -6,23 +6,30 @@ import { useRouter } from 'expo-router';
 const AccountSettings = () => {
   const router = useRouter();
   const options = [
-    { title: 'Profile', icon: 'person-circle-outline', color: '#3498DB' },
-    { title: 'Security', icon: 'shield-checkmark-outline', color: '#3498DB' },
-    { title: 'Linked Devices', icon: 'phone-portrait-outline', color: '#3498DB' },
-    { title: 'Delete Account', icon: 'trash-outline', color: '#E74C3C' },
+    { title: 'Profile', icon: 'person-circle-outline', color: '#3498DB', route: '/settings/profile' },
+    { title: 'Security', icon: 'shield-checkmark-outline', color: '#3498DB', route: '/settings/security' },
+    { title: 'Linked Devices', icon: 'phone-portrait-outline', color: '#3498DB', route: '/settings/linked-devices' },
+    { title: 'Delete Account', icon: 'trash-outline', color: '#E74C3C', route: '/settings/delete-account' },
   ];
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <TouchableOpacity 
+          onPress={() => router.push("/settings")} 
+          style={styles.backButton}
+        >
           <Ionicons name="arrow-back" size={24} color="#2C3E50" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Account</Text>
       </View>
       <ScrollView style={styles.content}>
         {options.map((option, index) => (
-          <TouchableOpacity key={index} style={styles.optionItem}>
+          <TouchableOpacity 
+            key={index} 
+            style={styles.optionItem}
+            onPress={() => router.push(option.route as any)}
+          >
             <View style={[styles.iconContainer, { backgroundColor: `${option.color}20` }]}>
               <Ionicons name={option.icon as any} size={24} color={option.color} />
             </View>

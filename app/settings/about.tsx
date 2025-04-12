@@ -26,23 +26,19 @@ const AboutScreen = () => {
         </View>
 
         <View style={styles.infoSection}>
-          <TouchableOpacity style={styles.infoItem}>
+          <TouchableOpacity 
+            style={styles.infoItem}
+            onPress={() => router.push('/settings/whats-new')}
+          >
             <Text style={styles.infoTitle}>What's New</Text>
             <Ionicons name="chevron-forward" size={20} color="#95A5A6" />
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.infoItem}>
+          <TouchableOpacity 
+            style={styles.infoItem}
+            onPress={() => router.push('/settings/licenses')}
+          >
             <Text style={styles.infoTitle}>Licenses</Text>
-            <Ionicons name="chevron-forward" size={20} color="#95A5A6" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.infoItem}>
-            <Text style={styles.infoTitle}>Privacy Policy</Text>
-            <Ionicons name="chevron-forward" size={20} color="#95A5A6" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.infoItem}>
-            <Text style={styles.infoTitle}>Terms of Service</Text>
             <Ionicons name="chevron-forward" size={20} color="#95A5A6" />
           </TouchableOpacity>
         </View>

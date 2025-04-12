@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform, Animated, Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import ChatsScreen from '@/app/(tabs)/chats';
 import StatusScreen from '@/app/(tabs)/status';
 import CallsScreen from '@/app/(tabs)/calls';
@@ -10,6 +11,7 @@ import SettingsScreen from '@/app/(tabs)/settings';
 const Navbar: React.FC = () => {
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState('Chats');
+  const [scaleAnim] = useState(new Animated.Value(1));
 
   const tabs = [
     { name: 'Chats', icon: 'chatbubbles-outline', component: ChatsScreen },
@@ -24,17 +26,43 @@ const Navbar: React.FC = () => {
     return ScreenComponent ? <ScreenComponent /> : null;
   };
 
+  const handleAddPress = () => {
+    Animated.sequence([
+      Animated.timing(scaleAnim, {
+        toValue: 0.9,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(scaleAnim, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      router.push('/new');
+    });
+  };
+
   return (
     <View style={styles.mainContainer}>
       <View style={[styles.header, { paddingTop: insets.top }]}>
-        <Text style={styles.headerTitle}>Cyphernix</Text>
+        <Text style={styles.headerTitle}>chat aap</Text>
         <View style={styles.headerRight}>
-          <TouchableOpacity style={styles.iconButton}>
+          <TouchableOpacity 
+            style={styles.iconButton}
+            activeOpacity={0.7}
+          >
             <Ionicons name="search-outline" size={24} color="#2C3E50" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="add" size={28} color="#2C3E50" />
-          </TouchableOpacity>
+          <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+            <TouchableOpacity 
+              style={styles.addButton}
+              onPress={handleAddPress}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="add" size={28} color="#FFFFFF" />
+            </TouchableOpacity>
+          </Animated.View>
         </View>
       </View>
       
@@ -45,9 +73,12 @@ const Navbar: React.FC = () => {
       <View style={[styles.footer, { paddingBottom: insets.bottom }]}>
         <View style={styles.tabContainer}>
           {tabs.map((tab) => (
-            <TouchableOpacity
+            <Pressable
               key={tab.name}
-              style={[styles.tab]}
+              style={({ pressed }) => [
+                styles.tab,
+                pressed && styles.tabPressed
+              ]}
               onPress={() => setActiveTab(tab.name)}
             >
               <Ionicons 
@@ -61,7 +92,7 @@ const Navbar: React.FC = () => {
               ]}>
                 {tab.name}
               </Text>
-            </TouchableOpacity>
+            </Pressable>
           ))}
         </View>
       </View>
@@ -122,11 +153,28 @@ const styles = StyleSheet.create({
   headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 12,
   },
   iconButton: {
     padding: 8,
     borderRadius: 8,
+    backgroundColor: '#F8F9FA',
+  },
+  addButton: {
+    padding: 8,
+    borderRadius: 12,
+    backgroundColor: '#3498DB',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
   tabContainer: {
     flexDirection: 'row',
@@ -138,6 +186,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 4,
+  },
+  tabPressed: {
+    opacity: 0.7,
   },
   tabText: {
     fontSize: 12,

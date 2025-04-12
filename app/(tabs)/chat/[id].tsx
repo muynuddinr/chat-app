@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Audio } from 'expo-av';
+import * as VideoThumbnails from 'expo-video-thumbnails';
 
 interface Message {
   id: string;
@@ -10,11 +12,24 @@ interface Message {
   isMe: boolean;
 }
 
+interface ChatUser {
+  id: string;
+  name: string;
+  avatar: string;
+  status: string;
+}
+
 export default function ChatScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const [newMessage, setNewMessage] = useState('');
-  
+  const [user, setUser] = useState<ChatUser>({
+    id: id as string,
+    name: 'John Doe',
+    avatar: 'https://i.pravatar.cc/150?img=1',
+    status: 'online'
+  });
+
   const [messages] = useState<Message[]>([
     {
       id: '1',
@@ -56,6 +71,32 @@ export default function ChatScreen() {
     }
   };
 
+  const handleVideoCall = async () => {
+    // Here you would typically integrate with a video call service
+    // For example: WebRTC, Twilio, or Agora
+    console.log('Starting video call with:', user.name);
+    router.push({
+      pathname: '/(tabs)/chat/video-call',
+      params: { userId: user.id }
+    });
+  };
+
+  const handleVoiceCall = async () => {
+    // Here you would typically integrate with a voice call service
+    console.log('Starting voice call with:', user.name);
+    router.push({
+      pathname: '/(tabs)/chat/video-call',
+      params: { userId: user.id }
+    });
+  };
+
+  const handleProfilePress = () => {
+    router.push({
+      pathname: '/(tabs)/profile/[id]',
+      params: { id: user.id }
+    });
+  };
+
   return (
     <KeyboardAvoidingView 
       style={styles.container} 
@@ -66,12 +107,33 @@ export default function ChatScreen() {
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="#2C3E50" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>John Doe</Text>
+        
+        <TouchableOpacity 
+          style={styles.container}
+          onPress={handleProfilePress}
+        >
+          <Image
+            source={{ uri: user.avatar }}
+            style={styles.avatar}
+            accessibilityLabel={`${user.name}'s avatar`}
+          />
+          <View style={{ flexDirection: 'column', flex: 1 }}>
+            <Text style={styles.headerTitle}>{user.name}</Text>
+            <Text style={{ fontSize: 12, color: '#95A5A6' }}>{user.status}</Text>
+          </View>
+        </TouchableOpacity>
+
         <View style={styles.headerRight}>
-          <TouchableOpacity style={styles.headerButton}>
+          <TouchableOpacity 
+            style={styles.headerButton}
+            onPress={handleVideoCall}
+          >
             <Ionicons name="videocam-outline" size={24} color="#2C3E50" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.headerButton}>
+          <TouchableOpacity 
+            style={styles.headerButton}
+            onPress={handleVoiceCall}
+          >
             <Ionicons name="call-outline" size={22} color="#2C3E50" />
           </TouchableOpacity>
         </View>
@@ -111,6 +173,7 @@ export default function ChatScreen() {
   );
 }
 
+// Add these styles to the StyleSheet
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -215,5 +278,11 @@ const styles = StyleSheet.create({
   },
   sendButtonActive: {
     backgroundColor: '#3498DB',
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 12,
   },
 });
