@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 const callsData = [
   {
@@ -9,6 +10,7 @@ const callsData = [
     time: '10:30 AM',
     type: 'incoming',
     missed: false,
+    phoneNumber: '+1234567890',
   },
   {
     id: '2',
@@ -16,12 +18,22 @@ const callsData = [
     time: 'Yesterday',
     type: 'outgoing',
     missed: false,
+    phoneNumber: '+1987654321',
   },
   // Add more call items
 ];
 
 export default function CallsScreen() {
-  const renderCallItem = ({ item }: { item: { id: string; name: string; time: string; type: 'incoming' | 'outgoing'; missed: boolean } }) => (
+  const router = useRouter();
+
+  const handleCall = (id: string) => {
+    router.push({
+      pathname: '/call/[id]',
+      params: { id }
+    });
+  };
+
+  const renderCallItem = ({ item }: { item: { id: string; name: string; time: string; type: 'incoming' | 'outgoing'; missed: boolean; phoneNumber: string } }) => (
     <TouchableOpacity style={styles.callItem}>
       <View style={styles.callIcon}>
         <Ionicons
@@ -42,7 +54,10 @@ export default function CallsScreen() {
           <Text style={styles.time}>{item.time}</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.callButton}>
+      <TouchableOpacity 
+        style={styles.callButton}
+        onPress={() => handleCall(item.id)}
+      >
         <Ionicons name="call" size={22} color="#3498DB" />
       </TouchableOpacity>
     </TouchableOpacity>
@@ -51,7 +66,7 @@ export default function CallsScreen() {
   return (
     <View style={styles.container}>
       <FlatList
-        data={callsData as Array<{ id: string; name: string; time: string; type: 'incoming' | 'outgoing'; missed: boolean }>}
+        data={callsData as Array<{ id: string; name: string; time: string; type: 'incoming' | 'outgoing'; missed: boolean; phoneNumber: string }>}
         renderItem={renderCallItem}
         keyExtractor={(item) => item.id}
       />

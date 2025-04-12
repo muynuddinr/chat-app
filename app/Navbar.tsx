@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Platform, Animated, Pressable } from 'react-native';
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  TouchableOpacity, 
+  Platform, 
+  Animated, 
+  Pressable,
+  Modal,
+  TextInput,
+  FlatList
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
@@ -12,6 +23,8 @@ const Navbar: React.FC = () => {
   const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState('Chats');
   const [scaleAnim] = useState(new Animated.Value(1));
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const tabs = [
     { name: 'Chats', icon: 'chatbubbles-outline', component: ChatsScreen },
@@ -43,6 +56,34 @@ const Navbar: React.FC = () => {
     });
   };
 
+  // Sample data for search (you can replace this with your actual data)
+  const searchData = [
+    { id: '1', name: 'John Doe', lastMessage: 'Hey, how are you?' },
+    { id: '2', name: 'Jane Smith', lastMessage: 'The meeting is scheduled for tomorrow' },
+    { id: '3', name: 'Mike Johnson', lastMessage: 'Please check the documents I sent' },
+  ];
+
+  const filteredData = searchData.filter(item => 
+    item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.lastMessage.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const renderSearchItem = ({ item }: any) => (
+    <TouchableOpacity 
+      style={styles.searchItem}
+      onPress={() => {
+        setIsSearchVisible(false);
+        router.push({
+          pathname: '/(tabs)/chat/[id]',
+          params: { id: item.id }
+        });
+      }}
+    >
+      <Text style={styles.searchItemName}>{item.name}</Text>
+      <Text style={styles.searchItemMessage} numberOfLines={1}>{item.lastMessage}</Text>
+    </TouchableOpacity>
+  );
+
   return (
     <View style={styles.mainContainer}>
       <View style={[styles.header, { paddingTop: insets.top }]}>
@@ -51,6 +92,7 @@ const Navbar: React.FC = () => {
           <TouchableOpacity 
             style={styles.iconButton}
             activeOpacity={0.7}
+            onPress={() => setIsSearchVisible(true)}
           >
             <Ionicons name="search-outline" size={24} color="#2C3E50" />
           </TouchableOpacity>
@@ -65,10 +107,44 @@ const Navbar: React.FC = () => {
           </Animated.View>
         </View>
       </View>
-      
+
       <View style={styles.content}>
         {renderActiveScreen()}
       </View>
+
+      {/* Search Modal */}
+      <Modal
+        visible={isSearchVisible}
+        animationType="slide"
+        transparent={true}
+      >
+        <View style={styles.searchModal}>
+          <View style={[styles.searchHeader, { paddingTop: insets.top }]}>
+            <TouchableOpacity 
+              onPress={() => {
+                setIsSearchVisible(false);
+                setSearchQuery('');
+              }}
+              style={styles.backButton}
+            >
+              <Ionicons name="arrow-back" size={24} color="#2C3E50" />
+            </TouchableOpacity>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search..."
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              autoFocus
+            />
+          </View>
+          <FlatList
+            data={filteredData}
+            renderItem={renderSearchItem}
+            keyExtractor={item => item.id}
+            style={styles.searchList}
+          />
+        </View>
+      </Modal>
 
       <View style={[styles.footer, { paddingBottom: insets.bottom }]}>
         <View style={styles.tabContainer}>
@@ -197,6 +273,47 @@ const styles = StyleSheet.create({
   },
   activeTabText: {
     color: '#3498DB',
+  },
+  searchModal: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+  searchHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#F4F4F4',
+  },
+  backButton: {
+    marginRight: 16,
+  },
+  searchInput: {
+    flex: 1,
+    height: 40,
+    backgroundColor: '#F8F9FA',
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    fontSize: 16,
+  },
+  searchList: {
+    flex: 1,
+  },
+  searchItem: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F4F4F4',
+  },
+  searchItemName: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#2C3E50',
+    marginBottom: 4,
+  },
+  searchItemMessage: {
+    fontSize: 14,
+    color: '#7F8C8D',
   },
 });
 
