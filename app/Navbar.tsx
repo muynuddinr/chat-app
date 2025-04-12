@@ -87,7 +87,7 @@ const Navbar: React.FC = () => {
   return (
     <View style={styles.mainContainer}>
       <View style={[styles.header, { paddingTop: insets.top }]}>
-        <Text style={styles.headerTitle}>chat aap</Text>
+        <Text style={styles.headerTitle}>Cyphernix</Text>
         <View style={styles.headerRight}>
           <TouchableOpacity 
             style={styles.iconButton}
@@ -179,6 +179,7 @@ const Navbar: React.FC = () => {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
+    backgroundColor: '#FFFFFF',
   },
   header: {
     backgroundColor: '#FFFFFF',
@@ -186,65 +187,77 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 16,
-    height: 60,
+    height: 65,
     borderBottomWidth: 1,
-    borderBottomColor: '#F4F4F4',
+    borderBottomColor: '#E8E8E8',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
-        shadowRadius: 3,
+        shadowRadius: 4,
       },
       android: {
-        elevation: 2,
+        elevation: 3,
       },
     }),
   },
   content: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F8F9FA',
   },
   footer: {
     backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
-    borderTopColor: '#F4F4F4',
+    borderTopColor: '#E8E8E8',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: -1 },
+        shadowOffset: { width: 0, height: -2 },
         shadowOpacity: 0.1,
-        shadowRadius: 3,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  headerTitle: {
+    fontSize: 26,
+    fontWeight: '700',
+    color: '#1A73E8',
+    letterSpacing: 0.5,
+  },
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  iconButton: {
+    padding: 10,
+    borderRadius: 12,
+    backgroundColor: '#F0F4F8',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
       },
       android: {
         elevation: 2,
       },
     }),
   },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: '#2C3E50',
-  },
-  headerRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  iconButton: {
-    padding: 8,
-    borderRadius: 8,
-    backgroundColor: '#F8F9FA',
-  },
   addButton: {
-    padding: 8,
+    padding: 10,
     borderRadius: 12,
-    backgroundColor: '#3498DB',
+    backgroundColor: '#1A73E8',
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
+        shadowColor: '#1A73E8',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.3,
         shadowRadius: 4,
       },
       android: {
@@ -254,7 +267,8 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     flexDirection: 'row',
-    height: 60,
+    height: 65,
+    backgroundColor: '#FFFFFF',
   },
   tab: {
     flex: 1,
@@ -262,17 +276,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 4,
+    paddingVertical: 8,
   },
   tabPressed: {
     opacity: 0.7,
+    backgroundColor: '#F0F4F8',
   },
   tabText: {
     fontSize: 12,
-    color: '#95A5A6',
-    fontWeight: '500',
+    color: '#94A3B8',
+    fontWeight: '600',
   },
   activeTabText: {
-    color: '#3498DB',
+    color: '#1A73E8',
   },
   searchModal: {
     flex: 1,
@@ -284,36 +300,53 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: '#F4F4F4',
+    borderBottomColor: '#E8E8E8',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   backButton: {
     marginRight: 16,
+    padding: 8,
+    borderRadius: 10,
+    backgroundColor: '#F0F4F8',
   },
   searchInput: {
     flex: 1,
-    height: 40,
-    backgroundColor: '#F8F9FA',
-    borderRadius: 20,
+    height: 44,
+    backgroundColor: '#F0F4F8',
+    borderRadius: 12,
     paddingHorizontal: 16,
     fontSize: 16,
+    color: '#1E293B',
   },
   searchList: {
     flex: 1,
+    backgroundColor: '#FFFFFF',
   },
   searchItem: {
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#F4F4F4',
+    borderBottomColor: '#E8E8E8',
+    backgroundColor: '#FFFFFF',
   },
   searchItemName: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#2C3E50',
+    color: '#1E293B',
     marginBottom: 4,
   },
   searchItemMessage: {
     fontSize: 14,
-    color: '#7F8C8D',
+    color: '#64748B',
   },
 });
 
