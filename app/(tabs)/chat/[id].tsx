@@ -109,7 +109,7 @@ export default function ChatScreen() {
         </TouchableOpacity>
         
         <TouchableOpacity 
-          style={styles.container}
+          style={styles.userInfo}
           onPress={handleProfilePress}
         >
           <Image
@@ -117,9 +117,9 @@ export default function ChatScreen() {
             style={styles.avatar}
             accessibilityLabel={`${user.name}'s avatar`}
           />
-          <View style={{ flexDirection: 'column', flex: 1 }}>
+          <View style={styles.userTextContainer}>
             <Text style={styles.headerTitle}>{user.name}</Text>
-            <Text style={{ fontSize: 12, color: '#95A5A6' }}>{user.status}</Text>
+            <Text style={styles.statusText}>{user.status}</Text>
           </View>
         </TouchableOpacity>
 
@@ -173,7 +173,6 @@ export default function ChatScreen() {
   );
 }
 
-// Add these styles to the StyleSheet
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -284,5 +283,18 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     marginRight: 12,
+  },
+  userInfo: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  userTextContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  statusText: {
+    fontSize: 12,
+    color: '#95A5A6',
   },
 });
